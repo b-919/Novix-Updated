@@ -155,7 +155,7 @@ public class Projects{
 		
 		String last = Settings.getString("lastproject");
 
-		currentProject = projects.get(last);
+		currentProject = last == null ? null : projects.get(last);
 
 		for(Project project : projects.values()){
 			try{
@@ -173,7 +173,7 @@ public class Projects{
 
 		saveProjectsFile();
 		
-		if(projects.get(last) == null){ // no project selected
+		if(currentProject == null){ // no project selected
 			Novix.log("No project selected.");
 			tryLoadAnotherProject();
 		}else{

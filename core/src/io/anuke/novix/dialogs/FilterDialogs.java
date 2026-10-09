@@ -7,6 +7,7 @@ import io.anuke.novix.element.ColorBox;
 import io.anuke.novix.element.FloatingMenu;
 import io.anuke.novix.filter.Filter;
 import io.anuke.novix.internal.Layer;
+import io.anuke.ucore.function.StringSupplier;
 import io.anuke.ucore.scene.event.InputEvent;
 import io.anuke.ucore.scene.event.InputListener;
 import io.anuke.ucore.scene.style.Drawable;
@@ -109,19 +110,19 @@ public class FilterDialogs{
 		{
 			tweaks.left();
 			
-			tweaks.add(()->"Hue: " + (int)h.getValue()).left();
+			tweaks.add((StringSupplier)(()->"Hue: " + (int)h.getValue())).left();
 			tweaks.row();
 			h = updateOn(tweaks.addSlider(0, 360f, 1f, 180, null)).growX().get();
 			
 			tweaks.row();
 			
-			tweaks.add(()->"Saturation: " + (int)s.getValue()).left();
+			tweaks.add((StringSupplier)(()->"Saturation: " + (int)s.getValue())).left();
 			tweaks.row();
 			s = updateOn(tweaks.addSlider(0, 100f, 1f, 50, null)).growX().get();
 			
 			tweaks.row();
 			
-			tweaks.add(()->"Brightness: " + (int)b.getValue()).left();
+			tweaks.add((StringSupplier)(()->"Brightness: " + (int)b.getValue())).left();
 			tweaks.row();
 			b = updateOn(tweaks.addSlider(0, 100f, 1f, 50, null)).growX().get();
 			
@@ -140,7 +141,7 @@ public class FilterDialogs{
 	contrast = new FilterMenu(Filter.contrast, "Contrast"){
 		Slider slider;
 		{
-			tweaks.add(()->"Contrast: " + (int)slider.getValue()).left();
+			tweaks.add((StringSupplier)(()->"Contrast: " + (int)slider.getValue())).left();
 			tweaks.row();
 			
 			slider = updateOn(tweaks.addSlider(-50, 50, 1f, 0, null)).growX().get();

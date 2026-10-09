@@ -2,6 +2,7 @@ package io.anuke.novix.ui;
 
 import io.anuke.novix.element.FloatingMenu;
 import io.anuke.ucore.core.Settings;
+import io.anuke.ucore.function.StringSupplier;
 
 public class SettingsMenu extends FloatingMenu{
 
@@ -21,6 +22,6 @@ public class SettingsMenu extends FloatingMenu{
 			Settings.save();
 		}).left().padRight(10f);
 		
-		content.add(() -> name + ": " + (Settings.getBool(prefName) ? "[title]On" : "[accent]Off"));
+		content.add((StringSupplier)(() -> name + ": " + (Settings.getBool(prefName) ? "[title]On" : "[accent]Off")));
 	}
 }

@@ -9,6 +9,7 @@ import io.anuke.novix.element.ColorBar;
 import io.anuke.novix.internal.NovixEvent.AlphaChange;
 import io.anuke.ucore.core.Events;
 import io.anuke.ucore.core.Settings;
+import io.anuke.ucore.function.StringSupplier;
 import io.anuke.ucore.scene.actions.Actions;
 import io.anuke.ucore.scene.builders.build;
 import io.anuke.ucore.scene.builders.table;
@@ -77,11 +78,11 @@ public class BottomSlider extends Table{
 			
 			add(extra).left().grow();
 			
-			extra.add(()->"Brush size: " + (int)sizeslider.getValue()).left();
+			extra.add((StringSupplier)(()->"Brush size: " + (int)sizeslider.getValue())).left();
 			extra.row();
 			extra.add(sizeslider).growX();
 			extra.row();
-			extra.add(()->"Alpha: " + String.format("%.2f", alphabar.getValue())).left();
+			extra.add((StringSupplier)(()->"Alpha: " + String.format("%.2f", alphabar.getValue()))).left();
 			extra.row();
 			extra.add(alphabar).height(40).padTop(10).padBottom(8).padRight(4).growX();
 			

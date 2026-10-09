@@ -1,14 +1,38 @@
 buildscript {
     repositories {
+        google()
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
     }
-    
+
     dependencies {
-        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:9.1.0'
+    }
+}
+
+task setupUCore {
+    description = 'Clones the uCore version Novix targets into the local uCore directory.'
+    group = 'setup'
+    doLast {
+        def ucoreDir = file('uCore')
+        if (ucoreDir.exists()) {
+            println 'uCore already exists. Skipping clone.'
+        } else {
+            println 'Cloning uCore @ 77506a6...'
+            ant.exec(executable: 'git', dir: rootDir) {
+                arg(value: 'clone')
+                arg(value: 'https://github.com/Anuken/uCore.git')
+                arg(value: 'uCore')
+            }
+            ant.exec(executable: 'git', dir: ucoreDir) {
+                arg(value: '-c')
+                arg(value: 'core.protectNTFS=false')
+                arg(value: 'checkout')
+                arg(value: '77506a6')
+            }
+            println 'uCore is ready for local compilation.'
+        }
     }
 }
 
@@ -20,13 +44,11 @@ allprojects {
     ext {
         appName = "Novix"
         gdxVersion = '1.9.6'
-        roboVMVersion = '2.3.0'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
+        uCoreVersion = '77506a6'
     }
 
     repositories {
+        google()
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -40,10 +62,15 @@ project(":desktop") {
 
 
     dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation project(":core")
+        if (new File(rootDir, 'uCore').exists()) {
+            implementation project(":uCore")
+        } else {
+            implementation "com.github.Anuken:ucore:$uCoreVersion"
+        }
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -52,28 +79,34 @@ project(":core") {
 
 
     dependencies {
-    	//compile fileTree(dir: '../core/lib', include: '*.jar')
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-      //  compile 'com.github.Anuken:ucore:4ab1a97'
+        if (new File(rootDir, 'uCore').exists()) {
+            implementation project(":uCore")
+        } else {
+            implementation "com.github.Anuken:ucore:$uCoreVersion"
+        }
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }
 
 project(":android") {
-    apply plugin: "android"
+    apply plugin: "com.android.application"
 
     configurations { natives }
 
     dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+        implementation project(":core")
+        if (new File(rootDir, 'uCore').exists()) {
+            implementation project(":uCore")
+        } else {
+            implementation "com.github.Anuken:ucore:$uCoreVersion"
+        }
+        implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
