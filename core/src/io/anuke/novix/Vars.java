@@ -17,5 +17,5 @@ public class Vars{
 	
 	public static final FileHandle paletteFile = Gdx.files.local("palettes.json");
 	public static final FileHandle projectFile = Gdx.files.local("projects.json");
-	public static final FileHandle projectDirectory = Gdx.files.absolute(Gdx.files.getExternalStoragePath()).child("NovixProjects");
+	public static final FileHandle projectDirectory = Gdx.files.local("NovixProjects");
 }

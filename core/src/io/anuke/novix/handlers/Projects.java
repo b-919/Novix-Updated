@@ -77,6 +77,7 @@ public class Projects{
 		
 		Project project = loadProject(name, layers, id);
 		
+		projectDirectory.mkdirs();
 		FileHandle[] files = project.getFiles();
 		
 		for(FileHandle file : files){
